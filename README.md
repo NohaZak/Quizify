@@ -22,9 +22,9 @@ Quizify is an interactive web application designed to enhance learning through e
 
 ### **Backend**
 
-- **Flask/Django**: Python frameworks for server-side functionality.
-- **Flask-Login/Django Authentication**: Secure user management.
-- **Flask-SQLAlchemy/Django ORM**: Interaction with the database.
+- **Django**: Python frameworks for server-side functionality.
+- **Django Authentication**: Secure user management.
+- **Django ORM**: Interaction with the database.
 
 ### **Frontend**
 
@@ -86,7 +86,6 @@ Quizify is an interactive web application designed to enhance learning through e
 
 5. **Access the Application:**
 
-   - Flask: Open [http://127.0.0.1:5000](http://127.0.0.1:5000)
    - Django: Open [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ### **Database Setup**
@@ -117,6 +116,22 @@ Quizify/
 ├── README.md
 └── .gitignore
 ```
+
+---
+
+Progress Overview
+
+Phase 1: Initial Setup
+
+✅ Django Project and App Structure: Successfully created the project and the quizzes app.
+
+✅ Database Configuration: Set up SQLite as the default development database.
+
+✅ Models Created and Tested: Defined Quiz, Question, and Result models; tested them using the Django shell.
+
+✅ Admin Panel Setup: Registered models in the admin panel and created a superuser for managing quizzes and questions.
+
+✅ Frontend Setup: Created a basic quiz list view and template to display quizzes.
 
 ---
 
