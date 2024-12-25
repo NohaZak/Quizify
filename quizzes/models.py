@@ -16,6 +16,15 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
+# Add this model to your code
+class Choice(models.Model):
+    question = models.ForeignKey(Question, related_name="choices", on_delete=models.CASCADE)
+    text = models.CharField(max_length=200)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
 class Result(models.Model):
     user = models.CharField(max_length=100)  # Replace with User ForeignKey if using authentication
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
@@ -24,4 +33,3 @@ class Result(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.quiz.title} - {self.score}"
-

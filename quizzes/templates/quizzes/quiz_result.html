@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ quiz.title }} - Results</title>
+</head>
+<body>
+    <h1>{{ quiz.title }} Results</h1>
+    <p>Your Score: {{ score }} out of {{ total }}</p>
+    
+    <h2>Answers:</h2>
+    <ul>
+        {% for question in questions %}
+            <li>
+                <strong>{{ question.text }}</strong><br>
+                Correct Answer: {{ question.correct_answer }}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <a href="/">Back to All Quizzes</a>
+</body>
+</html>
