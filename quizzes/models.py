@@ -22,6 +22,9 @@ class Choice(models.Model):
     text = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('question', 'text')  # Prevent duplicate choices for the same question
+
     def __str__(self):
         return self.text
 
