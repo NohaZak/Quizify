@@ -16,6 +16,14 @@
         {% endfor %}
     </ul>
 
+    <!-- Take Quiz Button -->
+    <div style="margin-top: 20px;">
+        <a href="{% url 'take_quiz' quiz.id %}" 
+           style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">
+            📝 Take Quiz
+        </a>
+    </div>
+
     <!-- Navigation Buttons -->
     <div style="margin-top: 20px;">
         {% if previous_quiz %}
