@@ -16,6 +16,21 @@
         {% endfor %}
     </ul>
 
-    <a href="{% url 'quiz_list' %}">Back to Quiz List</a>
+    <!-- Navigation Buttons -->
+    <div style="margin-top: 20px;">
+        {% if previous_quiz %}
+            <a href="{% url 'quiz_detail' previous_quiz.id %}" style="margin-right: 10px;">
+                ← Previous Quiz: {{ previous_quiz.title }}
+            </a>
+        {% endif %}
+        
+        {% if next_quiz %}
+            <a href="{% url 'quiz_detail' next_quiz.id %}">
+                Next Quiz: {{ next_quiz.title }} →
+            </a>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'quiz_list' %}" style="display: block; margin-top: 20px;">Back to Quiz List</a>
 </body>
 </html>

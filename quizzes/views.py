@@ -6,10 +6,25 @@ def quiz_list(request):
     quizzes = Quiz.objects.all()
     return render(request, 'quizzes/quiz_list.html', {'quizzes': quizzes})
 
+from django.shortcuts import render, get_object_or_404
+from .models import Quiz
+
 def quiz_detail(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     questions = quiz.questions.all()
-    return render(request, 'quizzes/quiz_detail.html', {'quiz': quiz, 'questions': questions})
+
+    # Fetch previous and next quizzes
+    previous_quiz = Quiz.objects.filter(id__lt=quiz_id).order_by('-id').first()
+    next_quiz = Quiz.objects.filter(id__gt=quiz_id).order_by('id').first()
+
+    context = {
+        'quiz': quiz,
+        'questions': questions,
+        'previous_quiz': previous_quiz,
+        'next_quiz': next_quiz,
+    }
+    return render(request, 'quizzes/quiz_detail.html', context)
+
 
 def take_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
