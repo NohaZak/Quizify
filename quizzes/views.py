@@ -74,10 +74,18 @@ def quiz_result(request, quiz_id):
     score = request.session.get('score', 0)
     total = request.session.get('total', 0)
 
+    # Map selected answers to choice texts
+    selected_choices = {}
+    for question in questions:
+        selected_choice_id = selected_answers.get(str(question.id))  # Ensure we fetch by string key
+        if selected_choice_id:
+            selected_choice = question.choices.filter(id=int(selected_choice_id)).first()
+            selected_choices[question.id] = selected_choice.text if selected_choice else "Invalid Choice"
+
     context = {
         'quiz': quiz,
         'questions': questions,
-        'selected_answers': selected_answers,
+        'selected_answers': selected_choices,  # Pass the choice text instead of IDs
         'score': score,
         'total': total,
     }

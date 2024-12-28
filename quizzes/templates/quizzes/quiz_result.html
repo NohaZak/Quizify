@@ -17,25 +17,21 @@
         <h2>Question Details</h2>
         <ul class="list-group">
             {% for question in questions %}
-                <li class="list-group-item">
-                    <strong>{{ question.text }}</strong><br>
-                    Your Answer: 
-                    {% with selected_answers|get:question.id as selected_choice %}
-                        {% if selected_choice %}
-                            {{ selected_choice }}
-                        {% else %}
-                            No Answer Selected
-                        {% endif %}
-                    {% endwith %}
-                    <br>
-                    Correct Answer:
-                    {% for choice in question.choices.all %}
-                        {% if choice.is_correct %}
-                            {{ choice.text }}
-                        {% endif %}
-                    {% endfor %}
-                </li>
-            {% endfor %}
+    <li class="list-group-item">
+        <strong>{{ question.text }}</strong><br>
+        Your Answer: 
+        {% with selected_answers|get:question.id as selected_choice %}
+            {{ selected_choice }}
+        {% endwith %}
+        <br>
+        Correct Answer:
+        {% for choice in question.choices.all %}
+            {% if choice.is_correct %}
+                {{ choice.text }}
+            {% endif %}
+        {% endfor %}
+    </li>
+{% endfor %}
         </ul>
 
         <a href="{% url 'quiz_list' %}" class="btn btn-secondary mt-4">Back to All Quizzes</a>
