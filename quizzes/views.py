@@ -95,6 +95,7 @@ def quiz_detail(request, quiz_id):
     return render(request, 'quizzes/quiz_detail.html', context)
 
 
+@login_required
 def take_quiz(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     questions = quiz.questions.prefetch_related('choices')
@@ -128,6 +129,11 @@ def take_quiz(request, quiz_id):
             return redirect('quiz_result', quiz_id=quiz.id)
     else:
         form = QuizForm(questions=questions)
+
+    return render(request, 'quizzes/take_quiz.html', {
+        'quiz': quiz,
+        'form': form,
+    })
 
     return render(request, 'quizzes/take_quiz.html', {
         'quiz': quiz,
