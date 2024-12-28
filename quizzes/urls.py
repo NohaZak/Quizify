@@ -3,7 +3,9 @@ from . import views
 
 urlpatterns = [
     # General Views
-    path('', views.landing_page, name='landing_page'),  # Default landing page
+    path('', views.home_page, name='landing_page'),  # Default landing page
+    path('home/', views.home_page, name='home_page'),
+
 
     # Authentication Views
     path('login/', views.user_login, name='login'),

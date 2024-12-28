@@ -1,44 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ quiz.title }}</title>
-</head>
-<body>
-    <h1>{{ quiz.title }}</h1>
-    <p>{{ quiz.description }}</p>
+{% extends 'base.html' %}
 
-    <h2>Questions</h2>
-    <ul>
-        {% for question in questions %}
-            <li>{{ question.text }}</li>
-        {% endfor %}
-    </ul>
+{% block title %}Quiz Detail{% endblock %}
 
-    <!-- Take Quiz Button -->
-    <div style="margin-top: 20px;">
-        <a href="{% url 'take_quiz' quiz.id %}" 
-           style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">
-            📝 Take Quiz
-        </a>
-    </div>
+{% block content %}
+<h1>{{ quiz.title }}</h1>
+<p>{{ quiz.description }}</p>
 
-    <!-- Navigation Buttons -->
-    <div style="margin-top: 20px;">
-        {% if previous_quiz %}
-            <a href="{% url 'quiz_detail' previous_quiz.id %}" style="margin-right: 10px;">
-                ← Previous Quiz: {{ previous_quiz.title }}
-            </a>
-        {% endif %}
-        
-        {% if next_quiz %}
-            <a href="{% url 'quiz_detail' next_quiz.id %}">
-                Next Quiz: {{ next_quiz.title }} →
-            </a>
-        {% endif %}
-    </div>
+<h3>Questions:</h3>
+<ul class="list-group">
+    {% for question in questions %}
+        <li class="list-group-item">{{ question.text }}</li>
+    {% endfor %}
+</ul>
 
-    <a href="{% url 'quiz_list' %}" style="display: block; margin-top: 20px;">Back to Quiz List</a>
-</body>
-</html>
+<a href="{% url 'take_quiz' quiz.id %}" class="btn btn-primary mt-3">Start Quiz</a>
+{% endblock %}

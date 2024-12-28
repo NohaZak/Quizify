@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Quizify{% endblock %}
+
+{% block content %}
+<h1 class="text-center my-4">Welcome to Quizify!</h1>
+<p class="text-center">Your ultimate platform for interactive and fun quizzes.</p>
+
+<div class="text-center mt-4">
+    <a href="{% url 'quiz_list' %}" class="btn btn-success btn-lg">Start a Quiz</a>
+    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Join Us</a>
+</div>
+
+<h2 class="mt-5">Contact Us</h2>
+<p>Email: support@quizify.com</p>
+<p>Phone: +123 456 7890</p>
+{% endblock %}

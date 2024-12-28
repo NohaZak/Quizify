@@ -1,40 +1,20 @@
-{% load static %}
-{% load custom_filters %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ quiz.title }} - Results</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-        <h1>{{ quiz.title }} - Results</h1>
-        <p>Your Score: <strong>{{ score }}</strong> out of <strong>{{ total }}</strong></p>
+{% block title %}Quiz Result{% endblock %}
 
-        <h2>Question Details</h2>
-        <ul class="list-group">
-            {% for question in questions %}
-    <li class="list-group-item">
-        <strong>{{ question.text }}</strong><br>
-        Your Answer: 
-        {% with selected_answers|get:question.id as selected_choice %}
-            {{ selected_choice }}
-        {% endwith %}
-        <br>
-        Correct Answer:
-        {% for choice in question.choices.all %}
-            {% if choice.is_correct %}
-                {{ choice.text }}
-            {% endif %}
-        {% endfor %}
-    </li>
-{% endfor %}
-        </ul>
+{% block content %}
+<h1>Results for "{{ quiz.title }}"</h1>
+<p><strong>Score:</strong> {{ score }}/{{ total }}</p>
 
-        <a href="{% url 'quiz_list' %}" class="btn btn-secondary mt-4">Back to All Quizzes</a>
-    </div>
-</body>
-</html>
+<h3>Your Answers:</h3>
+<ul class="list-group">
+    {% for question in questions %}
+        <li class="list-group-item">
+            <strong>{{ question.text }}</strong><br>
+            Your Answer: {{ selected_answers|get_item:question.id }}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'quiz_list' %}" class="btn btn-primary mt-3">Back to Quizzes</a>
+{% endblock %}
