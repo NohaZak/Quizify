@@ -52,6 +52,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'quizify.urls'
 
+# Redirect unauthenticated users to the correct login URL
+LOGIN_URL = '/login/'
+
+# Redirect users to the dashboard after login if no 'next' parameter is provided
+LOGIN_REDIRECT_URL = '/dashboard/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

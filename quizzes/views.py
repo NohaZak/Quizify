@@ -29,16 +29,29 @@ def register(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('quiz_list')
+        return redirect('dashboard')  # Redirect authenticated users to the dashboard
+
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('quiz_list')
+            return redirect('dashboard')  # Redirect after successful login
     else:
         form = AuthenticationForm()
+    
     return render(request, 'login.html', {'form': form})
+
+@login_required
+def user_dashboard(request):
+    user = request.user
+    user_results = Result.objects.filter(user=user.username).order_by('-id')[:5]  # Fetch recent 5 quiz results
+    
+    context = {
+        'user': user,
+        'user_results': user_results,
+    }
+    return render(request, 'dashboard.html', context)
 
 
 def user_logout(request):

@@ -9,6 +9,8 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('register/', views.register, name='register'),
+    path('dashboard/', views.user_dashboard, name='dashboard'),
+
 
     # Quiz Views
     path('quizzes/', views.quiz_list, name='quiz_list'),  # Changed to 'quizzes/' for clarity
