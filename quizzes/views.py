@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, Max
 from .models import Quiz, Result
 from .forms import QuizForm
 
@@ -45,11 +46,19 @@ def user_login(request):
 @login_required
 def user_dashboard(request):
     user = request.user
-    user_results = Result.objects.filter(user=user.username).order_by('-id')[:5]  # Fetch recent 5 quiz results
-    
+    user_results = Result.objects.filter(user=user.username).order_by('-id')[:5]  # Recent 5 results
+
+    # Calculate user statistics
+    total_quizzes = Result.objects.filter(user=user.username).count()
+    average_score = Result.objects.filter(user=user.username).aggregate(Avg('score'))['score__avg'] or 0
+    highest_score_quiz = Result.objects.filter(user=user.username).order_by('-score').first()
+
     context = {
         'user': user,
         'user_results': user_results,
+        'total_quizzes': total_quizzes,
+        'average_score': round(average_score, 2),
+        'highest_score_quiz': highest_score_quiz,
     }
     return render(request, 'dashboard.html', context)
 
