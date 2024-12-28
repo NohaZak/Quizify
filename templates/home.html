@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - Quizify{% endblock %}
+{% block title %}Welcome to Quizify{% endblock %}
 
 {% block content %}
-<h1 class="text-center my-4">Welcome to Quizify!</h1>
-<p class="text-center">Your ultimate platform for interactive and fun quizzes.</p>
+<div class="container text-center mt-5">
+    <h1 class="mb-4">Welcome to Quizify!</h1>
+    <p class="lead">
+        Quizify is your ultimate platform for interactive and engaging quizzes. Whether you're a student, a teacher, or just someone who loves to learn, Quizify has something for everyone. Start exploring our quizzes today and make learning fun!
+    </p>
 
-<div class="text-center mt-4">
-    <a href="{% url 'quiz_list' %}" class="btn btn-success btn-lg">Start a Quiz</a>
-    <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Join Us</a>
+    <div class="mt-4">
+        <a href="{% url 'quiz_list' %}" class="btn btn-success btn-lg">Start a Quiz</a>
+        <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Join Us</a>
+    </div>
+
+    <hr class="my-5">
+
+    <h2 class="mt-5">Contact Us</h2>
+    <p>Email: <a href="mailto:noha@example.com">nohazakaria55@gmail.com</a></p>
+    <p>Phone: +20 1062276225</p>
 </div>
-
-<h2 class="mt-5">Contact Us</h2>
-<p>Email: support@quizify.com</p>
-<p>Phone: +123 456 7890</p>
 {% endblock %}
