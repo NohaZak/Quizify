@@ -2,8 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Avg, Max
 from .models import Quiz, Result
+from urllib.parse import urlparse
 from .forms import QuizForm
 
 # ----------------------------
@@ -26,7 +28,11 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('quiz_list')
+            messages.success(request, 'Account created successfully! Welcome to Quizify.')
+            return redirect('dashboard')  # Redirect to dashboard upon success
+        else:
+            messages.error(request, 'There was an error creating your account. Please check the form and try again.')
+            print("Form errors:", form.errors)  # Debugging errors
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
@@ -34,14 +40,18 @@ def register(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')  # Redirect authenticated users to the dashboard
-
+        return redirect('dashboard')
+    
+    next_url = request.GET.get('next', 'dashboard')  # Default to 'dashboard' if no 'next'
+    
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('dashboard')  # Redirect after successful login
+            if next_url:
+                return redirect(next_url)
+            return redirect('dashboard')
     else:
         form = AuthenticationForm()
     
@@ -50,20 +60,27 @@ def user_login(request):
 @login_required
 def user_dashboard(request):
     user = request.user
+    
+    # Fetch user-specific quiz results
     user_results = Result.objects.filter(user=user.username).order_by('-id')[:5]  # Recent 5 results
-
+    
     # Calculate user statistics
     total_quizzes = Result.objects.filter(user=user.username).count()
     average_score = Result.objects.filter(user=user.username).aggregate(Avg('score'))['score__avg'] or 0
     highest_score_quiz = Result.objects.filter(user=user.username).order_by('-score').first()
-
+    
+    # New enhancement: Fetch latest quiz details
+    latest_quiz = Result.objects.filter(user=user.username).order_by('-id').first()
+    
     context = {
         'user': user,
         'user_results': user_results,
         'total_quizzes': total_quizzes,
         'average_score': round(average_score, 2),
         'highest_score_quiz': highest_score_quiz,
+        'latest_quiz': latest_quiz,  # Added latest quiz detail
     }
+    
     return render(request, 'dashboard.html', context)
 
 
@@ -135,12 +152,6 @@ def take_quiz(request, quiz_id):
         'form': form,
     })
 
-    return render(request, 'quizzes/take_quiz.html', {
-        'quiz': quiz,
-        'form': form,
-    })
-
-
 def quiz_result(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     questions = quiz.questions.prefetch_related('choices')
@@ -151,18 +162,24 @@ def quiz_result(request, quiz_id):
 
     # Map selected answers to choice texts
     selected_choices = {}
+    correct_answers = {}
+
     for question in questions:
-        selected_choice_id = selected_answers.get(str(question.id))  # Ensure we fetch by string key
-        if selected_choice_id:
-            selected_choice = question.choices.filter(id=int(selected_choice_id)).first()
-            selected_choices[question.id] = selected_choice.text if selected_choice else "Invalid Choice"
+        selected_choice_id = selected_answers.get(str(question.id))  # Ensure string key
+        selected_choice = question.choices.filter(id=selected_choice_id).first()
+        selected_choices[question.id] = selected_choice.text if selected_choice else "No Answer Selected"
+
+        correct_choice = question.choices.filter(is_correct=True).first()
+        correct_answers[question.id] = correct_choice.text if correct_choice else "No Correct Answer"
 
     context = {
         'quiz': quiz,
         'questions': questions,
-        'selected_answers': selected_choices,  # Pass the choice text instead of IDs
+        'selected_answers': selected_choices,
+        'correct_answers': correct_answers,
         'score': score,
         'total': total,
     }
 
     return render(request, 'quizzes/quiz_result.html', context)
+

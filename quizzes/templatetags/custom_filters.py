@@ -3,9 +3,11 @@ from django import template
 register = template.Library()
 
 @register.filter
-def get(dictionary, key):
-    """Safely get a value from a dictionary by key."""
-    if isinstance(dictionary, dict):
-        return dictionary.get(key, None)
-    return None
-
+def get_item(dictionary, key):
+    """
+    Retrieve a value from a dictionary using the provided key.
+    """
+    try:
+        return dictionary.get(key, "No Data")
+    except AttributeError:
+        return "No Data"

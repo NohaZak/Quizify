@@ -1,20 +1,23 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}Quiz Result{% endblock %}
 
 {% block content %}
-<h1>Results for "{{ quiz.title }}"</h1>
-<p><strong>Score:</strong> {{ score }}/{{ total }}</p>
+    <h1>Results for "{{ quiz.title }}"</h1>
+    <p><strong>Score:</strong> {{ score }} / {{ total }}</p>
 
-<h3>Your Answers:</h3>
-<ul class="list-group">
-    {% for question in questions %}
-        <li class="list-group-item">
-            <strong>{{ question.text }}</strong><br>
-            Your Answer: {{ selected_answers|get_item:question.id }}
-        </li>
-    {% endfor %}
-</ul>
+    <h3>Your Answers:</h3>
+    <ul class="list-group">
+        {% for question in questions %}
+            <li class="list-group-item">
+                <strong>{{ question.text }}</strong><br>
+                <span>Your Answer: {{ selected_answers|get_item:question.id|default:"No Answer Selected" }}</span><br>
+                <span>Correct Answer: {{ correct_answers|get_item:question.id|default:"No Correct Answer" }}</span>
+            </li>
+        {% endfor %}
+    </ul>
 
-<a href="{% url 'quiz_list' %}" class="btn btn-primary mt-3">Back to Quizzes</a>
+    <a href="{% url 'quiz_list' %}" class="btn btn-primary mt-3">Back to Quizzes</a>
 {% endblock %}
+s
