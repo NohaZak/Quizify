@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
@@ -205,20 +206,19 @@ def quiz_result(request, quiz_id):
 
 
 def leaderboard(request):
-    # Aggregate leaderboard data
     leaderboard_data = (
         Result.objects
-        .values('user')
+        .select_related('user')
         .annotate(
             total_quizzes=Count('id'),
             highest_score=Max('score'),
             average_score=Avg('score')
         )
-        .order_by('-highest_score')[:10]  # Top 10 users by highest score
+        .order_by('-highest_score')[:10]
     )
-    
+
     context = {
         'leaderboard_data': leaderboard_data
     }
-    
+
     return render(request, 'leaderboard.html', context)
