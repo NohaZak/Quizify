@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Quiz(models.Model):
     title = models.CharField(max_length=200)
@@ -29,10 +30,10 @@ class Choice(models.Model):
         return self.text
 
 class Result(models.Model):
-    user = models.CharField(max_length=100)  # Replace with User ForeignKey if using authentication
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to User model
+    quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE)  # Link to Quiz model
     score = models.IntegerField()
-    taken_at = models.DateTimeField(auto_now_add=True)
+    date_taken = models.DateTimeField(auto_now_add=True)  # Automatically set when the result is created
 
     def __str__(self):
-        return f"{self.user} - {self.quiz.title} - {self.score}"
+        return f"{self.user.username} - {self.quiz.title} - {self.score}"

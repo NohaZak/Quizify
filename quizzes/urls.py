@@ -5,6 +5,7 @@ urlpatterns = [
     # General Views
     path('', views.home_page, name='landing_page'),  # Default landing page
     path('home/', views.home_page, name='home_page'),
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
 
 
     # Authentication Views

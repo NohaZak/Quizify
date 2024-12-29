@@ -3,7 +3,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Avg, Max
+from django.utils import timezone
+from django.db.models import Avg, Count, Max
 from .models import Quiz, Result
 from urllib.parse import urlparse
 from .forms import QuizForm
@@ -62,15 +63,15 @@ def user_dashboard(request):
     user = request.user
     
     # Fetch user-specific quiz results
-    user_results = Result.objects.filter(user=user.username).order_by('-id')[:5]  # Recent 5 results
+    user_results = Result.objects.filter(user=user).order_by('-id')[:5]
     
     # Calculate user statistics
-    total_quizzes = Result.objects.filter(user=user.username).count()
-    average_score = Result.objects.filter(user=user.username).aggregate(Avg('score'))['score__avg'] or 0
-    highest_score_quiz = Result.objects.filter(user=user.username).order_by('-score').first()
+    total_quizzes = Result.objects.filter(user=user).count()
+    average_score = Result.objects.filter(user=user).aggregate(Avg('score'))['score__avg'] or 0
+    highest_score_quiz = Result.objects.filter(user=user).order_by('-score').first()
     
-    # New enhancement: Fetch latest quiz details
-    latest_quiz = Result.objects.filter(user=user.username).order_by('-id').first()
+    # Fetch latest quiz details
+    latest_quiz = Result.objects.filter(user=user).order_by('-date_taken').first()
     
     context = {
         'user': user,
@@ -78,7 +79,7 @@ def user_dashboard(request):
         'total_quizzes': total_quizzes,
         'average_score': round(average_score, 2),
         'highest_score_quiz': highest_score_quiz,
-        'latest_quiz': latest_quiz,  # Added latest quiz detail
+        'latest_quiz': latest_quiz,
     }
     
     return render(request, 'dashboard.html', context)
@@ -138,10 +139,11 @@ def take_quiz(request, quiz_id):
 
             # Save result in database
             Result.objects.create(
-                user=request.user.username if request.user.is_authenticated else "Anonymous",
+                user=request.user,
                 quiz=quiz,
                 score=score,
-            )
+                date_taken=timezone.now()  # Explicitly set the taken_at timestamp
+                )
 
             return redirect('quiz_result', quiz_id=quiz.id)
     else:
@@ -152,6 +154,7 @@ def take_quiz(request, quiz_id):
         'form': form,
     })
 
+@login_required
 def quiz_result(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     questions = quiz.questions.prefetch_related('choices')
@@ -172,6 +175,23 @@ def quiz_result(request, quiz_id):
         correct_choice = question.choices.filter(is_correct=True).first()
         correct_answers[question.id] = correct_choice.text if correct_choice else "No Correct Answer"
 
+    # Fetch the most recent result for this user and quiz
+    result = Result.objects.filter(user=request.user, quiz=quiz).order_by('-date_taken').first()
+
+    # If no result exists, create one
+    if not result:
+        result = Result.objects.create(
+            user=request.user,
+            quiz=quiz,
+            score=score,
+            date_taken=timezone.now()
+        )
+    else:
+        # Update the existing result if necessary
+        result.score = score
+        result.date_taken = timezone.now()
+        result.save()
+
     context = {
         'quiz': quiz,
         'questions': questions,
@@ -183,3 +203,22 @@ def quiz_result(request, quiz_id):
 
     return render(request, 'quizzes/quiz_result.html', context)
 
+
+def leaderboard(request):
+    # Aggregate leaderboard data
+    leaderboard_data = (
+        Result.objects
+        .values('user')
+        .annotate(
+            total_quizzes=Count('id'),
+            highest_score=Max('score'),
+            average_score=Avg('score')
+        )
+        .order_by('-highest_score')[:10]  # Top 10 users by highest score
+    )
+    
+    context = {
+        'leaderboard_data': leaderboard_data
+    }
+    
+    return render(request, 'leaderboard.html', context)
