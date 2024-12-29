@@ -31,12 +31,12 @@ def register(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Account created successfully! Welcome to Quizify.')
-            return redirect('dashboard')  # Redirect to dashboard upon success
+            return redirect('dashboard')
         else:
-            messages.error(request, 'There was an error creating your account. Please check the form and try again.')
-            print("Form errors:", form.errors)  # Debugging errors
+            messages.error(request, 'Please correct the errors below and try again.')
     else:
         form = UserCreationForm()
+    
     return render(request, 'register.html', {'form': form})
 
 
@@ -51,9 +51,12 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            messages.success(request, 'You have successfully logged in.')
             if next_url:
                 return redirect(next_url)
             return redirect('dashboard')
+        else:
+            messages.error(request, 'Invalid username or password. Please try again.')
     else:
         form = AuthenticationForm()
     
@@ -88,14 +91,13 @@ def user_dashboard(request):
 
 def user_logout(request):
     logout(request)
+    messages.success(request, 'You have been logged out successfully.')
     return redirect('login')
 
 def quiz_list(request):
     quizzes = Quiz.objects.all()
     return render(request, 'quizzes/quiz_list.html', {'quizzes': quizzes})
 
-from django.shortcuts import render, get_object_or_404
-from .models import Quiz
 
 def quiz_detail(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
