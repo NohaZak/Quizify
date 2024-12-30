@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'quizzes',
 ]
 
@@ -71,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -78,6 +80,12 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'quizify.wsgi.application'
+
+
+# Media files (User uploads)
+# https://docs.djangoproject.com/en/5.1/ref/settings/#media-root
+MEDIA_URL = '/media/'  # URL to access media files
+MEDIA_ROOT = BASE_DIR / 'media'  # Directory to store uploaded media files
 
 
 # Database

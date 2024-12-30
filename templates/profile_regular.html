@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %} 
+{% block title %}Profile - {{ user.username }}{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Profile Sidebar -->
+<div class="col-md-4">
+    <div class="card text-center shadow-sm">
+        <div class="card-body">
+            {% if user.userprofile.profile_picture and user.userprofile.profile_picture.url %}
+                <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Photo"
+                     class="rounded-circle img-fluid mb-3"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+                <img src="{{ MEDIA_URL }}profile_photos/default.png" alt="Default Profile Photo"
+                     class="rounded-circle img-fluid mb-3"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+            {% endif %}
+            <h4 class="card-title">{{ user.username }}</h4>
+            <p class="text-muted">{{ user.email }}</p>
+            <p><strong>Member since:</strong> {{ user.date_joined|date:"F Y" }}</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-sm">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+        <!-- Profile Main Section -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5>Edit Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5>Your Statistics</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Total Quizzes Taken: <strong>{{ total_quizzes }}</strong></li>
+                        <li class="list-group-item">Average Score: <strong>{{ average_score|floatformat:2 }}</strong></li>
+                        <li class="list-group-item">Highest Score: <strong>{{ highest_score }}</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_quizzes %}
+                        <ul class="list-group">
+                            {% for result in recent_quizzes %}
+                                <li class="list-group-item">
+                                    <strong>{{ result.quiz.title }}</strong> - Score: {{ result.score }} - Taken on {{ result.date_taken|date:"d M Y" }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No recent quiz activity.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

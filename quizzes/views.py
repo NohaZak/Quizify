@@ -1,14 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Avg, Count, Max
 from .models import Quiz, Result
 from urllib.parse import urlparse
-from .forms import QuizForm
+from .forms import QuizForm, CustomUserChangeForm, UserProfileForm
+
 
 # ----------------------------
 # General Views
@@ -24,11 +26,16 @@ def home_page(request):
 # ----------------------------
 # Authentication Views
 # ----------------------------
+
+
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_staff = False  # Ensure user is not staff
+            user.is_superuser = False  # Ensure user is not admin
+            user.save()
             login(request, user)
             messages.success(request, 'Account created successfully! Welcome to Quizify.')
             return redirect('dashboard')
@@ -38,7 +45,6 @@ def register(request):
         form = UserCreationForm()
     
     return render(request, 'register.html', {'form': form})
-
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -61,6 +67,34 @@ def user_login(request):
         form = AuthenticationForm()
     
     return render(request, 'login.html', {'form': form})
+
+
+def is_admin(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(is_admin)
+def admin_user_profile(request):
+    return redirect('/admin/')
+
+# Regular User Profile View
+@login_required
+def regular_user_profile(request):
+    form = CustomUserChangeForm(request.POST or None, request.FILES or None, instance=request.user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Your profile was updated successfully!')
+        return redirect('regular_user_profile')
+
+    context = {
+        'form': form,
+        'user_type': 'Regular User',
+        'recent_quizzes': Result.objects.filter(user=request.user).order_by('-date_taken')[:5],
+        'total_quizzes': Result.objects.filter(user=request.user).count(),
+        'average_score': Result.objects.filter(user=request.user).aggregate(Avg('score'))['score__avg'] or 0,
+        'highest_score': Result.objects.filter(user=request.user).aggregate(Max('score'))['score__max'] or 0,
+    }
+    return render(request, 'profile_regular.html', context)
 
 @login_required
 def user_dashboard(request):
