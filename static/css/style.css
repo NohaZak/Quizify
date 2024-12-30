@@ -1,7 +1,26 @@
+/* Existing List Group Styles */
 .list-group-item {
     padding: 10px 15px;
 }
 
 .list-group-item .btn {
     margin-left: 10px;
+}
+
+/* Toast Notification Styles */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999; /* Ensure it's always on top */
+    pointer-events: auto;
+}
+
+.toast {
+    z-index: 10000; /* Ensure each toast stays above all other content */
+    opacity: 1 !important;
+}
+
+.toast .btn-close {
+    z-index: 10001;
 }
