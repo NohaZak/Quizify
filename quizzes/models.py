@@ -11,6 +11,23 @@ class UserProfile(models.Model):
         blank=True,
         null=True
     )
+    bio = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Write something about yourself."
+    )
+    preferred_language = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Your preferred language for communication."
+    )
+    timezone = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        help_text="Your preferred timezone."
+    )
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

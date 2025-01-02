@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Avg, Count, Max
-from .models import Quiz, Result
+from .models import Quiz, Result, UserProfile
 from urllib.parse import urlparse
 from .forms import QuizForm, CustomUserChangeForm, UserProfileForm
 
@@ -48,9 +48,9 @@ def register(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
-    
-    next_url = request.GET.get('next', 'dashboard')  # Default to 'dashboard' if no 'next'
+        if request.user.is_superuser:
+            return redirect('/admin/')
+        return redirect('regular_user_profile')
     
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -58,9 +58,9 @@ def user_login(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, 'You have successfully logged in.')
-            if next_url:
-                return redirect(next_url)
-            return redirect('dashboard')
+            if user.is_superuser:
+                return redirect('/admin/')
+            return redirect('regular_user_profile')
         else:
             messages.error(request, 'Invalid username or password. Please try again.')
     else:
@@ -80,19 +80,21 @@ def admin_user_profile(request):
 # Regular User Profile View
 @login_required
 def regular_user_profile(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
     form = CustomUserChangeForm(request.POST or None, request.FILES or None, instance=request.user)
+
     if request.method == 'POST' and form.is_valid():
         form.save()
+        user_profile.bio = request.POST.get('bio', user_profile.bio)
+        user_profile.preferred_language = request.POST.get('preferred_language', user_profile.preferred_language)
+        user_profile.timezone = request.POST.get('timezone', user_profile.timezone)
+        user_profile.save()
         messages.success(request, 'Your profile was updated successfully!')
         return redirect('regular_user_profile')
 
     context = {
         'form': form,
-        'user_type': 'Regular User',
-        'recent_quizzes': Result.objects.filter(user=request.user).order_by('-date_taken')[:5],
-        'total_quizzes': Result.objects.filter(user=request.user).count(),
-        'average_score': Result.objects.filter(user=request.user).aggregate(Avg('score'))['score__avg'] or 0,
-        'highest_score': Result.objects.filter(user=request.user).aggregate(Max('score'))['score__max'] or 0,
+        'user_profile': user_profile,
     }
     return render(request, 'profile_regular.html', context)
 
