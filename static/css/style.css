@@ -1,26 +1,192 @@
-/* Existing List Group Styles */
-.list-group-item {
-    padding: 10px 15px;
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #f9fafc, #e3f2fd);
+    color: #333;
+    line-height: 1.6;
 }
 
-.list-group-item .btn {
-    margin-left: 10px;
+/* Highlighted Text Styling */
+.about p span,
+.card p,
+.feature p,
+.contact p,
+footer p {
+    font-size: 1.4rem; /* Larger font size */
+    font-weight: bold;
+    color: #444;
 }
 
-/* Toast Notification Styles */
-.toast-container {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 9999; /* Ensure it's always on top */
-    pointer-events: auto;
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(to right, #4caf50, #388e3c);
+    color: white;
+    margin-bottom: 40px;
+    animation: fadeIn 2s ease-in-out;
 }
 
-.toast {
-    z-index: 10000; /* Ensure each toast stays above all other content */
-    opacity: 1 !important;
+.hero h1 {
+    font-size: 4rem;
+    font-weight: bold;
 }
 
-.toast .btn-close {
-    z-index: 10001;
+.hero p {
+    font-size: 1.5rem;
+}
+
+.hero-buttons .btn {
+    margin: 10px;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+}
+
+/* About Section */
+.about {
+    text-align: center;
+    margin: 60px auto;
+    max-width: 800px;
+    animation: slideIn 1.5s ease-in-out;
+}
+
+.about h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+}
+
+.about p {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+/* Quiz Cards Section */
+.quiz-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 60px 0;
+    flex-wrap: wrap; /* Ensures responsiveness */
+}
+
+.card {
+    text-align: center;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    width: 350px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card p {
+    display: none; /* Hidden by default */
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.card:hover p {
+    display: block; /* Show on hover */
+}
+
+/* Features Section */
+.feature {
+    text-align: center;
+    padding: 50px 20px;
+    margin-top: 40px;
+    transition: transform 0.3s, background-color 0.3s;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature:hover {
+    transform: scale(1.03);
+    background-color: #f1f8e9;
+}
+
+.feature p {
+    display: none;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.feature:hover p {
+    display: block;
+}
+
+/* Contact Section */
+.contact {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 1.3rem;
+}
+
+.contact a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.cta-footer {
+    text-align: center;
+    margin-top: 60px;
+    background: #333;
+    color: white;
+    padding: 20px;
+}
+
+.cta-footer p {
+    font-size: 1.5rem;
+}
+
+.cta-footer a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1.3rem;
+    color: white;
+    background: #4caf50;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.cta-footer a:hover {
+    background: #388e3c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

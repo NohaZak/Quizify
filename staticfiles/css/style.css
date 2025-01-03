@@ -1,7 +1,164 @@
-.list-group-item {
-    padding: 10px 15px;
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #f9fafc, #e3f2fd);
+    color: #333;
+    line-height: 1.6;
 }
 
-.list-group-item .btn {
-    margin-left: 10px;
+/* Highlighted Text Styling */
+.about p span,
+.card p,
+.feature p,
+.contact p,
+footer p {
+    font-size: 1.2rem; /* Larger font size */
+    font-weight: 600;
+    color: #444;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(to right, #4caf50, #388e3c);
+    color: white;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 1.4rem;
+}
+
+.hero-buttons .btn {
+    margin: 10px;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+}
+
+/* About Section */
+.about {
+    text-align: center;
+    margin: 60px auto;
+    max-width: 800px;
+}
+
+.about h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.about p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* Quiz Cards Section */
+.quiz-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 60px 0;
+    flex-wrap: wrap; /* Ensures responsiveness */
+}
+
+.card {
+    text-align: center;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 30px;
+    width: 300px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card p {
+    display: none; /* Hide description initially */
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.card:hover p {
+    display: block; /* Show on hover */
+}
+
+/* Features Section */
+.feature {
+    text-align: center;
+    padding: 50px 20px;
+    margin-top: 40px;
+    transition: transform 0.3s, background-color 0.3s;
+    border-radius: 8px;
+}
+
+.feature:hover {
+    transform: scale(1.03);
+    background-color: #f1f8e9; /* Subtle green background */
+    cursor: pointer;
+}
+
+.feature p {
+    display: none;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.feature:hover p {
+    display: block; /* Show on hover */
+}
+
+/* Contact Section */
+.contact {
+    text-align: center;
+    margin-top: 60px;
+    font-size: 1.2rem;
+}
+
+.contact a {
+    color: #4caf50;
+    text-decoration: none;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.cta-footer {
+    text-align: center;
+    margin-top: 60px;
+    background: #333;
+    color: white;
+    padding: 20px;
+}
+
+.cta-footer p {
+    font-size: 1.3rem;
+}
+
+.cta-footer a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    color: white;
+    background: #4caf50;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.cta-footer a:hover {
+    background: #388e3c;
 }

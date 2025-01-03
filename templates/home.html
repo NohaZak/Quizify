@@ -3,21 +3,67 @@
 {% block title %}Welcome to Quizify{% endblock %}
 
 {% block content %}
-<div class="container text-center mt-5">
-    <h1 class="mb-4">Welcome to Quizify!</h1>
-    <p class="lead">
-        Quizify is your ultimate platform for interactive and engaging quizzes. Whether you're a student, a teacher, or just someone who loves to learn, Quizify has something for everyone. Start exploring our quizzes today and make learning fun!
-    </p>
-
-    <div class="mt-4">
+<!-- Hero Section with Animation -->
+<section class="hero" data-aos="fade-up">
+    <h1>Welcome to Quizify!</h1>
+    <p>Your ultimate platform for interactive and engaging quizzes.</p>
+    <div class="hero-buttons">
         <a href="{% url 'quiz_list' %}" class="btn btn-success btn-lg">Start a Quiz</a>
-        <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">Join Us</a>
+        <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">Join Us</a>
     </div>
+</section>
 
-    <hr class="my-5">
+<!-- About Section -->
+<section class="about" data-aos="fade-in">
+    <h2>About Quizify</h2>
+    <p><span>Quizify is an innovative platform designed to make learning fun and engaging through interactive quizzes.</span></p>
+    <p><span>Whether you're preparing for exams, teaching, or just curious about new topics, Quizify is your go-to platform!</span></p>
+</section>
 
-    <h2 class="mt-5">Contact Us</h2>
-    <p>Email: <a href="mailto:noha@example.com">nohazakaria55@gmail.com</a></p>
+<!-- Quiz Cards Section -->
+<section class="quiz-cards">
+    <div class="card" data-aos="flip-left">
+        <h3>Geography Quiz</h3>
+        <p>Explore the world through our Geography Quiz!</p>
+        <a href="{% url 'quiz_list' %}" class="btn btn-success">Start Quiz</a>
+    </div>
+    <div class="card" data-aos="flip-right">
+        <h3>Math Quiz</h3>
+        <p>Sharpen your math skills with fun questions!</p>
+        <a href="{% url 'quiz_list' %}" class="btn btn-info">Start Quiz</a>
+    </div>
+</section>
+
+<!-- Animated Feature Sections -->
+<section class="feature" data-aos="fade-up">
+    <h2>Interactive Learning</h2>
+    <p>Engage in interactive quizzes tailored to your needs.</p>
+</section>
+<section class="feature" data-aos="fade-left">
+    <h2>Track Your Progress</h2>
+    <p>Monitor your scores and track your achievements.</p>
+</section>
+
+<!-- Contact Us Section -->
+<section class="contact">
+    <h2>Contact Us</h2>
+    <p>Email: <a href="mailto:nohazakaria55@gmail.com">nohazakaria55@gmail.com</a></p>
     <p>Phone: +20 1062276225</p>
-</div>
+</section>
+
+<!-- Call-to-Action Footer -->
+<footer class="cta-footer">
+    <p>Ready to start your learning journey?</p>
+    <a href="{% url 'register' %}" class="footer-btn">Sign Up Now</a>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    AOS.init({
+        duration: 1200,
+        easing: 'ease-in-out',
+        once: false,
+    });
+</script>
 {% endblock %}
