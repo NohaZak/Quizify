@@ -92,14 +92,28 @@ def regular_user_profile(request):
     form = CustomUserChangeForm(request.POST or None, request.FILES or None, instance=request.user)
 
     if request.method == 'POST' and form.is_valid():
+        # Save the user form
         form.save()
+
+        # Update the user profile fields
         user_profile.bio = request.POST.get('bio', user_profile.bio)
         user_profile.preferred_language = request.POST.get('preferred_language', user_profile.preferred_language)
         user_profile.timezone = request.POST.get('timezone', user_profile.timezone)
+
+        # Handle the profile picture upload
+        if 'profile_picture' in request.FILES:  # Use the correct field name
+            user_profile.profile_picture = request.FILES['profile_picture']
+        
+        # Save the updated user profile
         user_profile.save()
+        
+        # Add success message
         messages.success(request, 'Your profile was updated successfully!')
+        
+        # Redirect to the same page
         return redirect('regular_user_profile')
 
+    # Context for rendering the page
     context = {
         'form': form,
         'user_profile': user_profile,
