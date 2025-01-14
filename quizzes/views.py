@@ -10,6 +10,14 @@ from django.db.models import Avg, Count, Max
 from .models import Quiz, Result, UserProfile
 from urllib.parse import urlparse
 from .forms import QuizForm, CustomUserChangeForm, UserProfileForm
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer
+from .serializers import QuizSerializer
+from .models import Quiz
+
+
+
 
 
 # ----------------------------
@@ -260,3 +268,51 @@ def leaderboard(request):
     }
 
     return render(request, 'leaderboard.html', context)
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
+def quiz_api_view(request, id):
+    try:
+        quiz = Quiz.objects.get(id=id)
+        serializer = QuizSerializer(quiz)
+        return Response(serializer.data)
+    except Quiz.DoesNotExist:
+        return Response({'error': 'Quiz not found'}, status=404)
+    
+@api_view(['GET'])
+def quiz_list_api_view(request):
+    from .serializers import QuizSerializer  # Lazy import to avoid circular import
+    quizzes = Quiz.objects.all()
+    serializer = QuizSerializer(quizzes, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def quiz_search_api_view(request):
+    from .serializers import QuizSerializer  # Lazy import to avoid circular import
+    query = request.GET.get('q', None)
+    if query:
+        quizzes = Quiz.objects.filter(title__icontains=query) | Quiz.objects.filter(description__icontains=query)
+    else:
+        quizzes = Quiz.objects.all()
+    serializer = QuizSerializer(quizzes, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def quiz_by_category_api_view(request, category):
+    from .serializers import QuizSerializer  # Lazy import to avoid circular import
+    quizzes = Quiz.objects.filter(category=category)
+    serializer = QuizSerializer(quizzes, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def submit_quiz_result_api_view(request):
+    user = request.user
+    quiz_id = request.data.get('quiz_id')
+    score = request.data.get('score')
+
+    try:
+        quiz = Quiz.objects.get(id=quiz_id)
+        result = Result.objects.create(user=user, quiz=quiz, score=score, date_taken=timezone.now())
+        return Response({'message': 'Result submitted successfully!'}, status=201)
+    except Quiz.DoesNotExist:
+        return Response({'error': 'Quiz not found'}, status=404)

@@ -12,8 +12,8 @@ body {
 .feature p,
 .contact p,
 footer p {
-    font-size: 1.2rem; /* Larger font size */
-    font-weight: 600;
+    font-size: 1.4rem; /* Larger font size */
+    font-weight: bold;
     color: #444;
 }
 
@@ -24,15 +24,16 @@ footer p {
     background: linear-gradient(to right, #4caf50, #388e3c);
     color: white;
     margin-bottom: 40px;
+    animation: fadeIn 2s ease-in-out;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: bold;
 }
 
 .hero p {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
 }
 
 .hero-buttons .btn {
@@ -46,15 +47,16 @@ footer p {
     text-align: center;
     margin: 60px auto;
     max-width: 800px;
+    animation: slideIn 1.5s ease-in-out;
 }
 
 .about h2 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     margin-bottom: 20px;
 }
 
 .about p {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 10px;
 }
 
@@ -62,7 +64,7 @@ footer p {
 .quiz-cards {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin: 60px 0;
     flex-wrap: wrap; /* Ensures responsiveness */
 }
@@ -73,20 +75,21 @@ footer p {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 30px;
-    width: 300px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    width: 350px;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .card:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .card p {
-    display: none; /* Hide description initially */
-    font-size: 1rem;
+    display: none; /* Hidden by default */
+    font-size: 1.1rem;
     margin-top: 10px;
 }
 
@@ -101,29 +104,31 @@ footer p {
     margin-top: 40px;
     transition: transform 0.3s, background-color 0.3s;
     border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 .feature:hover {
     transform: scale(1.03);
-    background-color: #f1f8e9; /* Subtle green background */
-    cursor: pointer;
+    background-color: #f1f8e9;
 }
 
 .feature p {
     display: none;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-top: 10px;
 }
 
 .feature:hover p {
-    display: block; /* Show on hover */
+    display: block;
 }
 
 /* Contact Section */
 .contact {
     text-align: center;
     margin-top: 60px;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
 .contact a {
@@ -145,14 +150,14 @@ footer p {
 }
 
 .cta-footer p {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .cta-footer a {
     display: inline-block;
     margin-top: 10px;
     padding: 10px 20px;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: white;
     background: #4caf50;
     border-radius: 5px;
@@ -161,4 +166,27 @@ footer p {
 
 .cta-footer a:hover {
     background: #388e3c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
